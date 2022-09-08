@@ -4,6 +4,7 @@ import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.Map;
 
 public class ExampleClient extends WebSocketClient {
@@ -47,8 +48,12 @@ public class ExampleClient extends WebSocketClient {
     }
 
     public static void main(String[] args) throws URISyntaxException {
+
+        Map<String, String> httpHeaders = new HashMap<>();
+        httpHeaders.put("auth", "token");
+
         ExampleClient c = new ExampleClient(new URI(
-                "ws://localhost:3333")); // more about drafts here: http://github.com/TooTallNate/Java-WebSocket/wiki/Drafts
+                "ws://localhost:3333"), httpHeaders); // more about drafts here: http://github.com/TooTallNate/Java-WebSocket/wiki/Drafts
         c.connect();
     }
 

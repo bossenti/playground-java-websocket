@@ -1,10 +1,12 @@
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
+import org.json.JSONObject;
 
 import java.net.InetSocketAddress;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.util.Iterator;
 
 import static java.lang.Thread.sleep;
 
@@ -18,8 +20,11 @@ public class ExampleServer extends WebSocketServer {
         //conn.send("Welcome!"); //This method sends a message to the new client
         //broadcast("New connection: " + handshake.getResourceDescriptor()); //This method sends a message to all clients connected
         System.out.println(conn.getRemoteSocketAddress().getAddress().getHostAddress() + " connected.");
-        System.out.println(handshake.getResourceDescriptor());
-        System.out.println(handshake);
+        //Iterator<String> httpHeaders = handshake.iterateHttpFields();
+        System.out.println(handshake.getFieldValue("auth"));
+        //while (httpHeaders.hasNext()) {
+        //    System.out.println(httpHeaders.next());
+        //}
     }
 
     @Override
@@ -49,8 +54,12 @@ public class ExampleServer extends WebSocketServer {
         server.start();
 
         for (int i = 0; i<600; i++) {
-            server.broadcast("{ \"test\": " + i + "}");
-            System.out.println("Broadcasted message " + i);
+
+            JSONObject jsonMessage = new JSONObject();
+            jsonMessage.put("test", i);
+
+            server.broadcast(jsonMessage.toString());
+            System.out.println("Broadcasted message " + jsonMessage);
             try {
                 sleep(1000);
             } catch (InterruptedException e) {
