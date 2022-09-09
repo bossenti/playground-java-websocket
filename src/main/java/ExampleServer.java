@@ -4,9 +4,7 @@ import org.java_websocket.server.WebSocketServer;
 import org.json.JSONObject;
 
 import java.net.InetSocketAddress;
-import java.net.URI;
-import java.nio.charset.StandardCharsets;
-import java.util.Iterator;
+import java.util.*;
 
 import static java.lang.Thread.sleep;
 
@@ -53,13 +51,18 @@ public class ExampleServer extends WebSocketServer {
         server.setReuseAddr(true);
         server.start();
 
+        List<JSONObject> inoCubeMessages = Arrays.asList(
+
+            new JSONObject().put("type", "message").put("senderDeviceId", "@inovex.de_DC:8B:57:C3:94:49").put("Message", new JSONObject().put("id", "DC:8B:57:C3:94:49").put("timestamp",1661430527574L).put("temperature", 27.5)),
+            new JSONObject().put("type", "message").put("senderDeviceId", "@inovex.de_DC:8B:57:C3:94:49").put("Message", new JSONObject().put("id", "DC:8B:57:C3:94:49").put("timestamp", 1661430527488L).put("euler", new JSONObject().put("roll", -13.370407104492188).put("pitch", -67.87568664550781).put("yaw", 112.50822448730469)))
+        );
+
         for (int i = 0; i<600; i++) {
 
-            JSONObject jsonMessage = new JSONObject();
-            jsonMessage.put("test", i);
+            Collections.shuffle(inoCubeMessages);
 
-            server.broadcast(jsonMessage.toString());
-            System.out.println("Broadcasted message " + jsonMessage);
+            server.broadcast(inoCubeMessages.get(0).toString());
+            System.out.println("Broadcasted message " + inoCubeMessages.get(0).toString());
             try {
                 sleep(1000);
             } catch (InterruptedException e) {
